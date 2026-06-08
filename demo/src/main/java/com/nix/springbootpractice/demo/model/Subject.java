@@ -1,4 +1,4 @@
-package com.nix.springbootpractice.model;
+package com.nix.springbootpractice.demo.model;
 
 public class Subject {
     
