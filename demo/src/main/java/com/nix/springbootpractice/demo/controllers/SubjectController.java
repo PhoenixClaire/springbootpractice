@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nix.springbootpractice.model.Subject;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.RequestParam;
 
+//import for response entity
+import org.springframework.http.ResponseEntity;
 
 @RestController
 public class SubjectController {
@@ -30,12 +31,14 @@ public class SubjectController {
     @GetMapping("/api/subjects/{id}")
 
     //@PathVariable means get the id from the URL path and use it as a parameter
-    public Subject getSubjectById(@PathVariable Long id){
+    //return a ResponseEntity --> return a subject with the HTTP response
+    public ResponseEntity<Subject> getSubjectById(@PathVariable Long id){
 
         //uses stream to filter subjects by id and return the first match
         return subjects.stream()
                 .filter(subject -> subject.getId().equals(id))
                 .findFirst()
-                .orElse(null);
+                .map(subject -> ResponseEntity.ok(subject)) //ok response if the subject is found
+                .orElse(ResponseEntity.notFound().build()); //error 404
     }
 }
