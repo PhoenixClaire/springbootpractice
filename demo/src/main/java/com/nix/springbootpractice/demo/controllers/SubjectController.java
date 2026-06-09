@@ -19,6 +19,9 @@ import com.nix.springbootpractice.demo.dto.SubjectRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+//import for PUT endpoint
+import org.springframework.web.bind.annotation.PutMapping;
+
 @RestController
 public class SubjectController {
 
@@ -68,5 +71,35 @@ public class SubjectController {
         subjects.add(newSubject);
 
         return newSubject;
+    }
+
+    //PUT for a specific subject by id
+    @PutMapping("/api/subjects/{id}")
+
+    //return the HTTP response with the updated subject
+    public ResponseEntity<Subject> updateSubject(
+
+        //find by id based on the path variable
+        @PathVariable Long id,
+
+        //ensure the name is not blank
+        @Valid @RequestBody SubjectRequest request
+    ){
+        //check the subjects to find the one with the matching id
+        for(Subject subject : subjects){
+
+            //if the id matches, name will be updated
+            if(subject.getId().equals(id)){
+
+                //set the new name for the subject
+                subject.setName(request.getName());
+
+                //return status and updated name
+                return ResponseEntity.ok(subject);
+            }
+        }
+
+        //error message
+        return ResponseEntity.notFound().build();
     }
 }

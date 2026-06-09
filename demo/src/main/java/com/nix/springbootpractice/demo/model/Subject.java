@@ -20,4 +20,9 @@ public class Subject {
     public String getName(){
         return name;
     }
+
+    //setter for name so user can update the name of te subject
+    public void setName(String name){
+        this.name = name;
+    }
 }
