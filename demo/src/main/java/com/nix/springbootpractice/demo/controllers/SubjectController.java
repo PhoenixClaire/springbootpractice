@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nix.springbootpractice.demo.model.Subject;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -54,7 +56,8 @@ public class SubjectController {
     @PostMapping("/api/subjects")
 
     //@RequestBody means get the request body and convert it to Java object
-    public Subject createSubject(@RequestBody SubjectRequest request){
+    //@Valid means validate the request body based on SubjectRequest class
+    public Subject createSubject(@Valid @RequestBody SubjectRequest request){
 
         //generate a new id for the subject
         //just +1 to the size of the list
