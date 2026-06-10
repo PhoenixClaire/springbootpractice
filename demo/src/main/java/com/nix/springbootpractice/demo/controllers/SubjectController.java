@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 //import for PUT endpoint
 import org.springframework.web.bind.annotation.PutMapping;
 
+//import for delete endpoint
+import org.springframework.web.bind.annotation.DeleteMapping;
+
 @RestController
 public class SubjectController {
 
@@ -102,4 +105,22 @@ public class SubjectController {
         //error message
         return ResponseEntity.notFound().build();
     }
+
+    //delete the subject by id
+    @DeleteMapping("/api/subjects/{id}")
+
+    //will return void but still return HTTP response 
+    public ResponseEntity<Void> deleteSubject(@PathVariable Long id){
+
+        //remove the subject with the matching id from the list
+        boolean removed = subjects.removeIf(subject -> subject.getId().equals(id));
+
+        if(removed){
+            return ResponseEntity.noContent().build(); //204 No Content if deleted successfully
+        }
+
+        return ResponseEntity.notFound().build(); //404 Not Found if the subject is not found
+    }
+
+
 }
