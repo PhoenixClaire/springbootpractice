@@ -2,11 +2,11 @@ package com.nix.springbootpractice.demo.service;
 
 import com.nix.springbootpractice.demo.dto.SubjectRequest;
 import com.nix.springbootpractice.demo.model.Subject;
+import com.nix.springbootpractice.demo.repositories.SubjectRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.ArrayList;
 
 //handles the business logic of the applcation
 
@@ -14,69 +14,47 @@ import java.util.ArrayList;
 @Service
 public class SubjectService {
     
-    //list of subjects to simulate a database
-    private final List<Subject> subjects = new ArrayList<>(
-        List.of( 
-            new Subject(1L, "Mathematics"),
-            new Subject(2L, "Physics"),
-            new Subject(3L, "Chemistry")
-        )
-    );
+    //inject the subject repository into the service
+    private final SubjectRepository subjectRepository;
 
-    //returns the list of subjects
-    public List<Subject> getAllSubjects() {
-        return subjects;
+    public SubjectService(SubjectRepository subjectRepository){
+        this.subjectRepository = subjectRepository;
     }
 
-    //find subject by id and return
+    //returns the list of subjects from db
+    public List<Subject> getAllSubjects() {
+        return subjectRepository.findAll();
+    }
+
+    //find subject by id and return from db
     //Optional --> can return empty if subject is not found 
     public Optional<Subject> getSubjectById(Long id) {
-        return subjects.stream()
-                .filter(subject -> subject.getId().equals(id))
-                .findFirst();
+        return subjectRepository.findById(id);
     }
 
     public Subject createSubject(SubjectRequest request){
 
-        //generate a new id for the subject
-        //size + 1
-        Long newId = (long) subjects.size() + 1; 
+        //generate a new id
+        Long newId = subjectRepository.getNextId();
 
-        //create a new subject with new name and id
+        //create a new subject into the db
         Subject newSubject = new Subject(newId, request.getName());
-
-        //add the new subject to the list
-        subjects.add(newSubject);
-
-        return newSubject;
+        return subjectRepository.save(newSubject);
     }
 
-    //update subject by id
+    //update subject by id and return the updated subject from db
     //Optional --> can return empty if updating a subject that does not exist
     public Optional<Subject> updateSubject(Long id, SubjectRequest request){
-
-        //loop through the list of subjects
-        for(Subject subject : subjects){
-
-            //if the subject id matches the id in the request
-            if(subject.getId().equals(id)){
-
-                //update the name
-                subject.setName(request.getName());
-
-                //return the updated subject
-                return Optional.of(subject);
-            }
-        }
-        //if no subject is found with the given id, return empty
-        return Optional.empty();
+        return subjectRepository.findById(id)
+                .map(subject -> {
+                    subject.setName(request.getName());
+                    return subject;
+                });
     }
 
-    //return true if successfully deleted 
+    //return true if successfully deleted from db
     public boolean deleteSubject(Long id){
-
-        //remove the subject with the given id from the list
-        return subjects.removeIf(subject -> subject.getId().equals(id));
+        return subjectRepository.deleteById(id);
     }
 
 }
