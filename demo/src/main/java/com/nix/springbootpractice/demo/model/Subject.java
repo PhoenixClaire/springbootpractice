@@ -1,18 +1,36 @@
 package com.nix.springbootpractice.demo.model;
 
+//turn this class into an entity that can be stored in the database
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+//this tells spring that this class is an entity --> database table
+@Entity
 public class Subject {
-    
-    //a subject has an id and a name
+
+    @Id //this field is the primary key
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //db will generate the ID
     private Long id;
+
     private String name;
 
-    //constructor
-    public Subject(Long id, String name) {
+    //constructors needed by jpa
+    public Subject(){
+
+    }
+
+    public Subject(String name){
+        this.name = name;
+    }
+
+    public Subject(Long id, String name){
         this.id = id;
         this.name = name;
     }
 
-    //getters for id and name to allow spring to access these properties 
+    //getters and setters
     public Long getId(){
         return id;
     }
@@ -21,8 +39,7 @@ public class Subject {
         return name;
     }
 
-    //setter for name so user can update the name of te subject
     public void setName(String name){
-        this.name = name;
+        this.name = name; 
     }
 }

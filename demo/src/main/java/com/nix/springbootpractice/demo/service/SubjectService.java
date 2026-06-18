@@ -33,12 +33,9 @@ public class SubjectService {
     }
 
     public Subject createSubject(SubjectRequest request){
-
-        //generate a new id
-        Long newId = subjectRepository.getNextId();
-
-        //create a new subject into the db
-        Subject newSubject = new Subject(newId, request.getName());
+        //create a new subject with the name 
+        //db will generate the id
+        Subject newSubject = new Subject(request.getName());
         return subjectRepository.save(newSubject);
     }
 
@@ -54,7 +51,12 @@ public class SubjectService {
 
     //return true if successfully deleted from db
     public boolean deleteSubject(Long id){
-        return subjectRepository.deleteById(id);
+        if(!subjectRepository.existsById(id)){
+            return false;
+        }
+
+        subjectRepository.deleteById(id);
+        return true;
     }
 
 }
