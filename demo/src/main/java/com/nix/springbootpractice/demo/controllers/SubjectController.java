@@ -49,24 +49,17 @@ public class SubjectController {
     @PutMapping("/api/subjects/{id}")
 
     //return the update subject if found, otherwise, 404
-    public ResponseEntity<Subject> updateSubject(
+    public Subject updateSubject(
             @PathVariable Long id,
             @Valid @RequestBody SubjectRequest request
     ) {
-        return subjectService.updateSubject(id, request)
-                .map(subject -> ResponseEntity.ok(subject))
-                .orElse(ResponseEntity.notFound().build());
+        return subjectService.updateSubject(id, request);
     }
 
     //delete subject by id
     @DeleteMapping("/api/subjects/{id}")
     public ResponseEntity<Void> deleteSubject(@PathVariable Long id) {
-        boolean deleted = subjectService.deleteSubject(id);
-
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.notFound().build();
+        subjectService.deleteSubject(id);
+        return ResponseEntity.noContent().build()
     }
 }

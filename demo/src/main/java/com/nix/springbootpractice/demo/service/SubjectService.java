@@ -42,23 +42,22 @@ public class SubjectService {
     }
 
     //update subject by id and return the updated subject from db
-    //Optional --> can return empty if updating a subject that does not exist
-    public Optional<Subject> updateSubject(Long id, SubjectRequest request){
-        return subjectRepository.findById(id)
-                .map(subject -> {
-                    subject.setName(request.getName());
-                    return subject;
-                });
+    public Subject updateSubject(Long id, SubjectRequest request){
+        Subject subject =  subjectRepository.findById(id)
+            .orElseThrow(() -> new SubjectNotFoundException(id)); //subject not found error
+
+        subject.setName(request.getName());
+
+        return subjectRepository.save(subject);
     }
 
-    //return true if successfully deleted from db
-    public boolean deleteSubject(Long id){
+    //display subject not found if successful
+    public void deleteSubject(Long id){
         if(!subjectRepository.existsById(id)){
-            return false;
+           throw new SubjectNotFoundException(id);
         }
 
         subjectRepository.deleteById(id);
-        return true;
     }
 
 }
