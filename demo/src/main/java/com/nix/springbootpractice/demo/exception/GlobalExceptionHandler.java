@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import jakarta.persistence.ExcludeSuperclassListeners;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,5 +28,14 @@ public class GlobalExceptionHandler {
         );
 
         return errors;
+    }
+
+    //run this method when a subject is not found
+    @ExceptionHandler(SubjectNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleSubjectNotFound(SubjectNotFoundException ex){
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return error;
     }
 }

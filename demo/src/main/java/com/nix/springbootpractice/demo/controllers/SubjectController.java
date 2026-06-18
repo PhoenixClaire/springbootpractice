@@ -31,10 +31,9 @@ public class SubjectController {
     @GetMapping("/api/subjects/{id}")
 
     //returns the subject if found
-    public ResponseEntity<Subject> getSubjectById(@PathVariable Long id) {
-        return subjectService.getSubjectById(id)
-                .map(subject -> ResponseEntity.ok(subject)) //200 ok if found
-                .orElse(ResponseEntity.notFound().build()); //404 not found 
+    //no need to return the http response since the exception handlers already handle errors
+    public Subject getSubjectById(@PathVariable Long id) {
+        return subjectService.getSubjectById(id); 
     }
 
 

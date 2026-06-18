@@ -1,6 +1,7 @@
 package com.nix.springbootpractice.demo.service;
 
 import com.nix.springbootpractice.demo.dto.SubjectRequest;
+import com.nix.springbootpractice.demo.exception.SubjectNotFoundException;
 import com.nix.springbootpractice.demo.model.Subject;
 import com.nix.springbootpractice.demo.repositories.SubjectRepository;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,9 @@ public class SubjectService {
 
     //find subject by id and return from db
     //Optional --> can return empty if subject is not found 
-    public Optional<Subject> getSubjectById(Long id) {
-        return subjectRepository.findById(id);
+    public Subject getSubjectById(Long id) {
+        return subjectRepository.findById(id)
+            .orElseThrow(() -> new SubjectNotFoundException(id));
     }
 
     public Subject createSubject(SubjectRequest request){
