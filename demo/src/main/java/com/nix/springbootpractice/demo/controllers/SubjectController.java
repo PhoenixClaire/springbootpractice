@@ -7,6 +7,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+//import subject response
+import com.nix.springbootpractice.demo.dto.SubjectResponse;
+
 import java.util.List;
 
 @RestController
@@ -23,7 +26,7 @@ public class SubjectController {
     @GetMapping("/api/subjects")
 
     //returns the list of subjects from the service
-    public List<Subject> getSubjects() {
+    public List<SubjectResponse> getSubjects() {
         return subjectService.getAllSubjects();
     }
 
@@ -32,7 +35,7 @@ public class SubjectController {
 
     //returns the subject if found
     //no need to return the http response since the exception handlers already handle errors
-    public Subject getSubjectById(@PathVariable Long id) {
+    public SubjectResponse getSubjectById(@PathVariable Long id) {
         return subjectService.getSubjectById(id); 
     }
 
@@ -41,7 +44,7 @@ public class SubjectController {
     @PostMapping("/api/subjects")
 
     //return the created subject with 201 created status
-    public Subject createSubject(@Valid @RequestBody SubjectRequest request) {
+    public SubjectResponse createSubject(@Valid @RequestBody SubjectRequest request) {
         return subjectService.createSubject(request);
     }
 
@@ -49,7 +52,7 @@ public class SubjectController {
     @PutMapping("/api/subjects/{id}")
 
     //return the update subject if found, otherwise, 404
-    public Subject updateSubject(
+    public SubjectResponse updateSubject(
             @PathVariable Long id,
             @Valid @RequestBody SubjectRequest request
     ) {
@@ -60,6 +63,6 @@ public class SubjectController {
     @DeleteMapping("/api/subjects/{id}")
     public ResponseEntity<Void> deleteSubject(@PathVariable Long id) {
         subjectService.deleteSubject(id);
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.noContent().build();
     }
 }

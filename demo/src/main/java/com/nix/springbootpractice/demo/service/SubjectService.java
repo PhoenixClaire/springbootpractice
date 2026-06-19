@@ -6,6 +6,9 @@ import com.nix.springbootpractice.demo.model.Subject;
 import com.nix.springbootpractice.demo.repositories.SubjectRepository;
 import org.springframework.stereotype.Service;
 
+//import subject response
+import com.nix.springbootpractice.demo.dto.SubjectResponse;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -23,32 +26,41 @@ public class SubjectService {
     }
 
     //returns the list of subjects from db
-    public List<Subject> getAllSubjects() {
-        return subjectRepository.findAll();
+    public List<SubjectResponse> getAllSubjects() {
+        return subjectRepository.findAll()
+            .stream()
+            .map(this::toResponse)
+            .toList();
     }
 
-    //find subject by id and return from db
-    //Optional --> can return empty if subject is not found 
-    public Subject getSubjectById(Long id) {
-        return subjectRepository.findById(id)
+    //find subject by id and return the formatted response
+    public SubjectResponse getSubjectById(Long id) {
+        Subject subject = subjectRepository.findById(id)
             .orElseThrow(() -> new SubjectNotFoundException(id));
+
+        return toResponse(subject);
     }
 
-    public Subject createSubject(SubjectRequest request){
+    public SubjectResponse createSubject(SubjectRequest request){
         //create a new subject with the name 
         //db will generate the id
         Subject newSubject = new Subject(request.getName());
-        return subjectRepository.save(newSubject);
+        Subject savedSubject = subjectRepository.save(newSubject);
+
+        return toResponse(savedSubject);
     }
 
     //update subject by id and return the updated subject from db
-    public Subject updateSubject(Long id, SubjectRequest request){
+    public SubjectResponse updateSubject(Long id, SubjectRequest request){
         Subject subject =  subjectRepository.findById(id)
             .orElseThrow(() -> new SubjectNotFoundException(id)); //subject not found error
 
         subject.setName(request.getName());
 
-        return subjectRepository.save(subject);
+        Subject updatedSubject = subjectRepository.save(subject);
+
+        //convert to response
+        return toResponse(updatedSubject);
     }
 
     //display subject not found if successful
@@ -58,6 +70,11 @@ public class SubjectService {
         }
 
         subjectRepository.deleteById(id);
+    }
+
+    //converts Subject into a Subject Response so the app doesn't return the db entity itself
+    private SubjectResponse toResponse(Subject subject){
+        return new SubjectResponse(subject.getId(), subject.getName());
     }
 
 }
