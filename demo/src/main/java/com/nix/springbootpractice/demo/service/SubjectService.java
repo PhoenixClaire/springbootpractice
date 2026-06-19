@@ -77,4 +77,12 @@ public class SubjectService {
         return new SubjectResponse(subject.getId(), subject.getName());
     }
 
+    //filter function
+    public List<SubjectResponse> searchSubjectByName(String name){
+        return subjectRepository.findByNameContainingIgnoreCase(name)
+            .stream()
+            .map(this::toResponse)
+            .toList();
+    }
+
 }

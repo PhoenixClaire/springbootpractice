@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import com.nix.springbootpractice.demo.dto.SubjectResponse;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 public class SubjectController {
@@ -65,4 +68,10 @@ public class SubjectController {
         subjectService.deleteSubject(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/api/subjects/search")
+    public List<SubjectResponse> seachSubjects (@RequestParam String name) {
+        return subjectService.searchSubjectByName(name);
+    }
+    
 }
