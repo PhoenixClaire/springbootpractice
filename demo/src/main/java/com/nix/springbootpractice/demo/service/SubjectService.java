@@ -9,6 +9,12 @@ import org.springframework.stereotype.Service;
 //import subject response
 import com.nix.springbootpractice.demo.dto.SubjectResponse;
 
+//imports for pagination
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +37,15 @@ public class SubjectService {
             .stream()
             .map(this::toResponse)
             .toList();
+    }
+
+    //returns list of subject with pages
+    public Page<SubjectResponse> getSubjectsPaginated(int page, int size, String sortBy){
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+
+        return subjectRepository.findAll(pageable)
+            .map(this::toResponse);
     }
 
     //find subject by id and return the formatted response

@@ -14,6 +14,8 @@ import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+//import for pagination
+import org.springframework.data.domain.Page;
 
 @RestController
 public class SubjectController {
@@ -32,6 +34,17 @@ public class SubjectController {
     public List<SubjectResponse> getSubjects() {
         return subjectService.getAllSubjects();
     }
+
+    //paginated list of subjects
+    @GetMapping("/api/subjects/paged")
+    public Page<SubjectResponse> getSubjectsPaginated(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size,
+        @RequestParam(defaultValue = "id") String sortBy
+    ) {
+        return subjectService.getSubjectsPaginated(page, size, sortBy);
+    }
+    
 
     //find subject by id
     @GetMapping("/api/subjects/{id}")
