@@ -40,9 +40,17 @@ public class SubjectService {
     }
 
     //returns list of subject with pages
-    public Page<SubjectResponse> getSubjectsPaginated(int page, int size, String sortBy){
+    public Page<SubjectResponse> getSubjectsPaginated(
+        int page, 
+        int size, 
+        String sortBy,
+        String direction){
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Sort sort = direction.equalsIgnoreCase("desc")
+            ? Sort.by(sortBy).descending()
+            : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         return subjectRepository.findAll(pageable)
             .map(this::toResponse);
